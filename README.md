@@ -86,6 +86,9 @@ joints = output.joints
 articulation prior. MANO interoperability uses user-supplied MANO v1.2 files;
 licensed MANO models are not redistributed.
 
+For GraspXL MANO motion archives, see the
+[dataset conversion guide](docs/graspxl_conversion.md).
+
 ## Supported identity models
 
 | Scope | Backend | Notes |

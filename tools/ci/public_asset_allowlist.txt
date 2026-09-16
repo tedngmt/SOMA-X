@@ -1,0 +1,24 @@
+# Public upstream SOMA-X assets; not a license grant for replacement content.
+assets/Anny/SOMA_wrap.obj
+assets/Anny/base_body.obj
+assets/GarmentMeasurements/SOMA_wrap.obj
+assets/GarmentMeasurements/mean.obj
+assets/MANO/SOMA_wrap_left.obj
+assets/MANO/SOMA_wrap_right.obj
+assets/MANO/base_hand_left.obj
+assets/MANO/base_hand_right.obj
+assets/MHR/SOMA_wrap_lod1.obj
+assets/MHR/base_body_lod1.obj
+assets/MHR/base_body_lod6.obj
+assets/MHR/mhr_model_lod1.pt
+assets/MHR/mhr_model_lod6.pt
+assets/SMPL/SOMA_wrap.obj
+assets/SMPL/base_body.obj
+assets/SMPL/smpl_anim.npy
+assets/SMPLX/SOMA_wrap.obj
+assets/SMPLX/base_body.obj
+assets/SOMAHand.npz
+assets/SOMA_neutral.npz
+assets/SOMA_template_rig.usda
+assets/correctives_model.pt
+assets/example_animation.npy

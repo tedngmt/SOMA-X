@@ -140,8 +140,89 @@ dmypy.json
 out/
 assets/*.pkl
 assets/**/*.pkl
+assets/MANO/LICENSE.txt
+assets/MANO/info.txt
 assets/nova-in-action.mp4
 assets/SMPLX/SMPLX_NEUTRAL.npz
 assets/GarmentMeasurements/point.npz
 
 public/
+
+# Local datasets, licensed models, checkpoints and derived geometry/motions.
+# Existing upstream public assets are explicitly excepted below. Git LFS does
+# not make a licensed model redistributable. See docs/public_release_safety.md.
+*.pkl
+*.pickle
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.h5
+*.hdf5
+*.obj
+*.ply
+*.stl
+*.fbx
+*.usd
+*.usda
+*.usdc
+*.usdz
+*.glb
+*.gltf
+*.blend
+*.zip
+*.zip.part*
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.crdownload
+/data/
+/datasets/
+/models/
+/body_models/
+/checkpoints/
+/outputs/
+/runs/
+/wandb/
+/Grab Dataset/
+/GraspXL DataSet/
+/GRAB_SOMA*/
+/GraspXL_SOMA*/
+/GraspXL_MANO*/
+/assets/SMPLX/version.txt
+/assets/MANO/info.txt
+/assets/MANO/LICENSE.txt
+.env.*
+!.env.example
+
+# Public assets already supplied by upstream SOMA-X before local conversions.
+# Keep in sync with tools/ci/public_asset_allowlist.txt. Do not add downloaded
+# SMPL/SMPL-X/SMPL-H/MANO parameters to this list.
+!/assets/Anny/SOMA_wrap.obj
+!/assets/Anny/base_body.obj
+!/assets/GarmentMeasurements/SOMA_wrap.obj
+!/assets/GarmentMeasurements/mean.obj
+!/assets/MANO/SOMA_wrap_left.obj
+!/assets/MANO/SOMA_wrap_right.obj
+!/assets/MANO/base_hand_left.obj
+!/assets/MANO/base_hand_right.obj
+!/assets/MHR/SOMA_wrap_lod1.obj
+!/assets/MHR/base_body_lod1.obj
+!/assets/MHR/base_body_lod6.obj
+!/assets/MHR/mhr_model_lod1.pt
+!/assets/MHR/mhr_model_lod6.pt
+!/assets/SMPL/SOMA_wrap.obj
+!/assets/SMPL/base_body.obj
+!/assets/SMPL/smpl_anim.npy
+!/assets/SMPLX/SOMA_wrap.obj
+!/assets/SMPLX/base_body.obj
+!/assets/SOMAHand.npz
+!/assets/SOMA_neutral.npz
+!/assets/SOMA_template_rig.usda
+!/assets/correctives_model.pt
+!/assets/example_animation.npy
