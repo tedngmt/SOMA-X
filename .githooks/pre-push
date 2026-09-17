@@ -5,12 +5,13 @@ trap 'rm -f "$updates"' EXIT HUP INT TERM
 cat > "$updates" || exit 1
 if command -v python3 >/dev/null 2>&1; then
     python3 tools/ci/check_public_release.py --pre-push < "$updates" || exit 1
+    python3 tools/ci/check_no_lfs_upload.py < "$updates" || exit 1
 elif command -v python >/dev/null 2>&1; then
     python tools/ci/check_public_release.py --pre-push < "$updates" || exit 1
+    python tools/ci/check_no_lfs_upload.py < "$updates" || exit 1
 else
     echo "Push blocked: Python is required for the local data guard." >&2
     exit 1
 fi
-# Run the guard before Git LFS can upload any objects.
-command -v git-lfs >/dev/null 2>&1 || { echo "Git LFS is required." >&2; exit 1; }
-git lfs pre-push "$@" < "$updates"
+# Code-only publication: deliberately do not invoke the Git LFS upload hook.
+exit 0

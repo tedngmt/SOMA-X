@@ -17,6 +17,11 @@ PAYLOADS = {'.pkl','.pickle','.npz','.npy','.pt','.pth','.ckpt','.safetensors',
             '.usdc','.usdz','.glb','.gltf','.blend','.zip','.tar','.tgz','.7z','.rar','.crdownload'}
 LOCAL_ROOTS = {'out','data','datasets','models','body_models','checkpoints',
                'outputs','runs','wandb','grab dataset','graspxl dataset'}
+# Exact inherited upstream blob, introduced in 6d758a9 and removed in dc16291.
+# This history-only exception never permits a new version or an index addition.
+HISTORICAL_UPSTREAM_ASSETS = {
+    ('5b396c34874ce08d0b12f06a4e6a536c0b44b469', 'assets/GarmentMeasurements/point.npz'),
+}
 
 
 def git(*args):
@@ -59,7 +64,9 @@ def main():
                 if set(fields[1])!={'0'}:refs.append(fields[1])
             if not refs:return 0
         lines=git('-c','core.quotePath=false','rev-list','--objects',*refs).splitlines()
-        paths={line.split(' ',1)[1].strip('"') for line in lines if ' ' in line}
+        entries=[(oid,path.strip('"')) for line in lines if ' ' in line
+                 for oid,path in [line.split(' ',1)]]
+        paths={path for oid,path in entries if (oid,path) not in HISTORICAL_UPSTREAM_ASSETS}
         scope='reachable Git history (including Git LFS pointer paths)'
     else:
         paths=set(git('ls-files','-z').split('\0'))- {''}

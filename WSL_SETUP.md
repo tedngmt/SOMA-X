@@ -64,8 +64,12 @@ Outputs are in `~/Projects/SOMA-X/out/wsl-demo`. From WSL, run
   `~/miniconda3/bin/` (already on this machine's PATH), and LFS filters were
   configured for this checkout. All 28 public assets match their Git LFS hashes.
 - Local executable publication hooks were restored from `.githooks/`. See
-  [public release safety](docs/public_release_safety.md) for the remaining
-  upstream historical asset review before pushing.
+  [public release safety](docs/public_release_safety.md) for the code-only push
+  policy. The historical upstream blocker has an exact-blob exception; the push
+  hook rejects new LFS pointers and never invokes an LFS upload.
+- This WSL checkout reuses the existing Windows Git Credential Manager for
+  GitHub authentication, configured locally for this repository. Credentials
+  remain in the Windows credential store; none are written into project files.
 
 Detailed test output is in `out/migration-validation/`. Migrated bytecode caches
 were cleared so future tracebacks use the new source paths. Historical conversion
