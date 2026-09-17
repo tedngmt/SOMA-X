@@ -1,24 +1,26 @@
 # Keeping local model/data files out of public Git
 
-## Current audit finding (2026-09-16)
+## Current audit finding (2026-09-17)
 
-Commit `f0158f5` added Git LFS pointers for these separately downloaded full models:
+The migrated Linux checkout is at `~/Projects/SOMA-X`, with HEAD `69568fd`
+based on upstream `d29dbe5`. The previous Windows commit `f0158f5`, which
+referenced downloaded SMPL-X male/female models, is absent from this checkout.
+Those full models, the neutral model and the MANO parameter files are present
+locally, ignored and untracked. The index check passes. This local check does
+not establish whether a previous remote copy or LFS upload has been removed.
 
-- `assets/SMPLX/SMPLX_MALE.npz` (108,753,445 bytes)
-- `assets/SMPLX/SMPLX_FEMALE.npz` (108,794,146 bytes)
+The all-history check still flags `assets/GarmentMeasurements/point.npz`.
+It was added in upstream `6d758a9` and removed in upstream `dc16291`; it is
+absent from the current tree and public asset allowlist. This is an upstream
+asset review finding, not evidence of a newly uploaded downloaded model or a
+conclusion about its license. Establish its redistribution terms before adding
+an exception, or omit that history from a separate clean publication.
+**The push guard remains blocked by this historical asset.**
 
-It also added `assets/SMPLX/version.txt`. Both `main` and the local cached
-`origin/main` reference contained that commit during this audit. Remote server
-visibility and whether the LFS payloads were uploaded have not been checked.
-
-The all-history audit also flags an older `assets/GarmentMeasurements/point.npz`
-payload. This asset is absent from the current tree and not in the current public
-asset allowlist. That is a review finding, not a conclusion about its license;
-exclude it from a clean publication or establish its redistribution terms first.
-
-The three `assets/SMPLX/` paths have been removed from the current Git index while the actual
-local files are retained. **That does not erase the earlier commit or remotely
-stored LFS objects. The current history is still blocked from publication.**
+All 28 materialized Git LFS assets and their cached objects match their committed
+SHA-256 hashes and sizes. Linux was missing Git LFS, which made those unchanged
+assets appear modified. Git LFS and executable hooks were restored locally;
+no model payloads, dataset contents or Git history were changed.
 
 ## Protection added
 
@@ -46,11 +48,13 @@ license audit. Review newly allowed assets and public release contents separatel
 
 ## History cleanup is a separate operation
 
-A new deletion commit alone is insufficient: earlier commits still reference the
-full-model LFS objects. Before publishing, either prepare a fresh code-only
-repository with clean history, or remove the affected paths from every ref that
-will be published. Rewriting shared history changes commit IDs and may require a
-coordinated force push. Do not rewrite or force-push a shared branch casually.
+If a licensed model is committed again, a deletion commit alone is insufficient:
+earlier commits still reference its LFS objects. Before publishing that history,
+either prepare a fresh code-only repository or remove the affected paths from
+every ref that will be published. Rewriting shared history changes commit IDs
+and may require a coordinated force push. Do not rewrite or force-push a shared
+branch casually. The migrated checkout already excludes the previous local
+full-model commit; the remaining upstream asset finding is described above.
 
 If models reached a hosting service, also address its retained LFS objects,
 cached views and other copies. Rewriting local Git history is not proof that the
@@ -77,7 +81,7 @@ python tools/ci/check_public_release.py --history
 git diff --cached --stat
 ```
 
-The index check should pass after untracking the downloaded models. The history
-check is expected to fail until the historical model references are removed.
+The index check passes. The history check is expected to fail until the upstream
+`point.npz` asset review is resolved or that history is excluded from publication.
 Source code importing SMPL-X/MANO can remain in Git; model parameters are loaded
 locally at runtime. Existing local conversions and their model files are intact.

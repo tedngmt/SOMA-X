@@ -1,0 +1,9 @@
+#!/bin/sh
+cd "$(git rev-parse --show-toplevel)" || exit 1
+if command -v python3 >/dev/null 2>&1; then
+    exec python3 tools/ci/check_public_release.py --index
+elif command -v python >/dev/null 2>&1; then
+    exec python tools/ci/check_public_release.py --index
+fi
+echo "Commit blocked: Python is required for the local data guard." >&2
+exit 1

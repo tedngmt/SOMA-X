@@ -18,7 +18,7 @@ WSL `soma-x` environment described in [WSL_SETUP.md](../WSL_SETUP.md).
 
 ```bash
 conda activate soma-x
-cd /mnt/c/Linux/SOMA-X
+cd ~/Projects/SOMA-X
 python -m pip install smplx chumpy
 
 # Inspect all archives and load one sample per archive; no model required.
