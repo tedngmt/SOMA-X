@@ -361,8 +361,10 @@ class CorrectivesMLP(nn.Module):
         # torch._validate_sparse_coo_tensor_args which triggers CUDA
         # in forked workers.  The tensors are converted to dense
         # immediately after loading, so validation is unnecessary.
+        # Accept any signature: torch <= 2.13 calls this with no arguments, torch >= 2.14
+        # passes weights_only=..., and a bare `lambda: None` raises a TypeError there.
         _orig_validate = torch._utils._validate_loaded_sparse_tensors
-        torch._utils._validate_loaded_sparse_tensors = lambda: None
+        torch._utils._validate_loaded_sparse_tensors = lambda *args, **kwargs: None
         try:
             ckpt = torch.load(path, map_location="cpu", weights_only=True)
         finally:
