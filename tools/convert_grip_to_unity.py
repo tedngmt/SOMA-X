@@ -136,6 +136,25 @@ def active_range(world, names, rest_deg):
     return int(idx[0]), int(idx[-1]) + 1
 
 
+def object_range(obj_pos, fps, pre, post, speed=0.002):
+    """Frames from a little before the object first moves to a little after it last does.
+
+    For a recording where the arms never both hang at rest before the pick-up -- the subject
+    walks in and reaches at once -- the arm-based range starts with the object already in
+    the hand. The object itself says when the interaction is: it rests until it is taken and
+    rests again once it is put back. Moving = travelling more than `speed` metres per frame
+    (2 mm at 30 fps is 6 cm/s); measured against the previous frame, not the start, because
+    an object is rarely put back on the exact spot it was taken from.
+    """
+    step = np.linalg.norm(np.diff(obj_pos, axis=0), axis=1)
+    idx = np.flatnonzero(step > speed)
+    if len(idx) == 0:
+        return 0, len(obj_pos)
+    a = max(0, int(idx[0]) - int(round(pre * fps)))
+    b = min(len(obj_pos), int(idx[-1]) + 1 + int(round(post * fps)))
+    return a, b
+
+
 def fk_check(world, t_world, t_orient, parents, hips, hips_pos, quats):
     """Rebuild joint positions the way Unity will and compare with SOMA's own."""
     T, J = world.shape[:2]
@@ -236,6 +255,11 @@ def main():
                     help="keep the T-poses that open and close every GRAB recording")
     ap.add_argument("--rest-deg", type=float, default=35.0,
                     help="upper-arm elevation below which the arms count as lowered")
+    ap.add_argument("--window", choices=["arms", "object"], default="arms",
+                    help="how the clip is trimmed: 'arms' keeps the span between the opening and "
+                         "closing T-poses (both arms hanging); 'object' keeps from 0.5 s before "
+                         "the object first moves to 1 s after it last does -- for a take where "
+                         "the arm-based span starts with the object already in the hand")
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--batch-size", type=int, default=64)
     ap.add_argument("--unity", type=Path, default=UNITY_CLIPS,
@@ -318,7 +342,12 @@ def main():
                     rest[j - 1] = (t_world[j, :3, 3] - t_world[parents[j], :3, 3]) @ A
 
             n = min(len(hips_pos), len(obj_pos))
-            a, b = (0, n) if args.keep_tpose else active_range(world[:n], names, args.rest_deg)
+            if args.keep_tpose:
+                a, b = 0, n
+            elif args.window == "object":
+                a, b = object_range(obj_pos[:n], FPS, pre=0.5, post=1.0)
+            else:
+                a, b = active_range(world[:n], names, args.rest_deg)
             clip = {
                 "name": f.stem, "source": variant, "fps": FPS, "frameCount": int(b - a),
                 "sourceFrames": [int(a), int(b)],
