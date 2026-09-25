@@ -18,7 +18,25 @@ sys.path.insert(0, str(ROOT))
 from soma.body import SOMALayer
 from soma.fitting.pose_inversion import PoseInversion
 from soma.io import save_soma_npz
-from tools.hand.convert_graspxl_to_soma import pack_rotations
+
+
+def pack_rotations(rotations, storage="compact"):
+    """Store float32 axis-angle rotations, or retain diagnostic matrices.
+
+    Axis-angle has three components instead of nine matrix entries. Projection
+    onto SO(3) removes the small numerical non-orthogonality from the fitter.
+    No frame removal, float16 quantization, or PCA approximation is applied.
+    """
+    if storage == "diagnostic":
+        return rotations
+    if storage != "compact":
+        raise ValueError(f"Unknown storage format: {storage}")
+    from scipy.spatial.transform import Rotation
+
+    shape = rotations.shape
+    return Rotation.from_matrix(rotations.reshape(-1, 3, 3)).as_rotvec().astype(
+        np.float32
+    ).reshape(*shape[:-2], 3)
 
 
 def json_save(path, data):

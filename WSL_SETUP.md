@@ -56,10 +56,10 @@ Outputs are in `~/Projects/SOMA-X/out/wsl-demo`. From WSL, run
 - The editable Python installation points to `~/Projects/SOMA-X`, including
   imports from outside the checkout. `pip check` passes.
 - PyTorch and Warp can use the RTX 3070 Ti Laptop GPU after the move.
-- Body, hand, geometry, package-layout, batched-skinning and GraspXL conversion
-  checks: **105 passed, 1 skipped, 49 deselected**. Anny remains optional.
-- GRAB, GraspXL SOMA and selected GraspXL MANO packages are siblings under
-  `~/Projects/`. Their recorded checksums and relative motion/mesh links pass.
+- Body, hand, geometry, package-layout and batched-skinning checks pass. Anny
+  remains optional.
+- GRAB packages are siblings under `~/Projects/`. Their recorded checksums and
+  relative motion/mesh links pass.
 - Git LFS was missing from Linux. Ubuntu's `git-lfs` binary was installed in
   `~/miniconda3/bin/` (already on this machine's PATH), and LFS filters were
   configured for this checkout. All 28 public assets match their Git LFS hashes.
